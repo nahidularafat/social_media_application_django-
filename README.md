@@ -1,1 +1,1 @@
-# chating_application_django-react
+# social_media_application_django-
