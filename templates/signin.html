@@ -1,0 +1,296 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'assets/images/favicon.png' %}" rel="icon" type="image/png">
+    <title>Sign In - BD BanglaGram</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #28a745; /* Bangladeshi green */
+            --primary-light: #4caf50;
+            --primary-dark: #218838;
+            --secondary: #005f73; /* Deep teal */
+            --accent: #ff6b35; /* Vibrant orange */
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --error: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e6f0f5 100%);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+        
+        .auth-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M30,50 Q50,30 70,50 T90,50" fill="none" stroke="%2328a745" stroke-width="0.5" opacity="0.05"/></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background-color: var(--white);
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+            outline: none;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .error-message {
+            color: var(--error);
+            background-color: rgba(229, 62, 62, 0.1);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--error);
+            font-size: 0.875rem;
+        }
+        
+        .footer {
+            background: var(--white);
+            padding: 1.5rem 0;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-link {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary);
+        }
+        
+        .auth-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-decoration {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(40, 167, 69, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+        
+        .decoration-1 {
+            top: -150px;
+            right: -150px;
+        }
+        
+        .decoration-2 {
+            bottom: -100px;
+            left: -100px;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-card {
+                padding: 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container flex-grow flex items-center justify-center p-4 relative">
+        <!-- Background decorations -->
+        <div class="auth-decoration decoration-1"></div>
+        <div class="auth-decoration decoration-2"></div>
+        <div class="auth-pattern"></div>
+        
+        <!-- Header -->
+        <header class="header absolute top-0 left-0 right-0">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center">
+                    <a href="/" class="logo-container">
+                        <span class="logo-icon">🇧🇩</span>
+                        <span class="logo-text">BD BanglaGram</span>
+                    </a>
+                    <a href="/signup" class="btn btn-primary" style="width: auto; padding: 0.5rem 1.25rem;">
+                        <i class="fas fa-user-plus mr-2"></i> Register
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Auth Card -->
+        <div class="auth-card w-full max-w-md p-8 sm:p-10">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-800 mb-2">স্বাগতম</h1>
+                <p class="text-gray-600">Sign in to connect with your community</p>
+            </div>
+
+            <!-- Error Messages -->
+            {% if messages %}
+            <div class="mb-6 space-y-3">
+                {% for message in messages %}
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle mr-2"></i> {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Login Form -->
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" 
+                           class="form-input" required>
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" 
+                           class="form-input" required>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" 
+                               class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                            Remember me
+                        </label>
+                    </div>
+                    
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-primary hover:text-primary-dark">
+                            Forgot password?
+                        </a>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Sign In
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center text-sm">
+                <p class="text-gray-600">
+                    Don't have an account? 
+                    <a href="/signup" class="font-medium text-primary hover:text-primary-dark">
+                        Create one
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex flex-wrap justify-center gap-4 mb-4 md:mb-0">
+                    <a href="#" class="footer-link">About</a>
+                    <a href="#" class="footer-link">Help</a>
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Cookies</a>
+                </div>
+                <p class="text-gray-500 text-sm">
+                    &copy; 2023 BD BanglaGram. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
+</body>
+</html>

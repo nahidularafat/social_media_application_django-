@@ -1,0 +1,279 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings | BanglaGram</title>
+    <link rel="icon" href="{% static 'assets/images/favicon.png' %}" type="image/png">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
+
+    <style>
+        :root {
+            --primary: #28a745; /* Green color */
+            --primary-light: #4caf50;
+            --secondary: #007bff;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --border: #e9ecef;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+        
+        .settings-container {
+            max-width: 800px;
+        }
+        
+        .settings-header {
+            color: var(--dark);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .settings-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .settings-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .profile-img-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            padding: 3px;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.1);
+        }
+        
+        .form-label {
+            color: var(--dark);
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--light);
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+            background: white;
+            outline: none;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+        }
+        
+        .btn-outline:hover {
+            background: var(--light);
+            border-color: var(--text-light);
+        }
+        
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .home-btn:hover {
+            color: var(--primary-light);
+            transform: translateX(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .settings-container {
+                padding: 20px;
+            }
+            
+            .profile-img-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body class="py-8 px-4">
+    <div class="settings-container mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+            <a href="/" class="home-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+            <h1 class="settings-header text-2xl md:text-3xl">
+                Account Settings <span class="text-gray-500 font-normal">@{{ user.username }}</span>
+            </h1>
+        </div>
+
+        <!-- Settings Card -->
+        <div class="settings-card p-6 md:p-8">
+            <form method="POST" enctype="multipart/form-data" id="settingsForm">
+                {% csrf_token %}
+                
+                <!-- Profile Picture -->
+                <div class="mb-10 text-center">
+                    <div class="profile-img-container">
+                        <img id="profilePreview" src="{{ user_profile.profileimg.url }}" class="profile-img" alt="Profile Image">
+                        <label for="imageUpload" class="upload-btn">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" id="imageUpload" name="image" class="hidden" accept="image/*" onchange="previewImage(this)">
+                    </div>
+                    <p id="fileName" class="text-sm text-gray-500 mt-2">Click the camera to change profile picture</p>
+                </div>
+                
+                <!-- Bio -->
+                <div class="mb-6">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea id="bio" name="bio" rows="4" class="form-input">{{ user_profile.bio }}</textarea>
+                </div>
+                
+                <!-- Location -->
+                <div class="mb-8">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" id="location" name="location" value="{{ user_profile.location }}" class="form-input" placeholder="Where are you from?">
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-end gap-3">
+                    <button type="reset" class="btn btn-outline">Reset Changes</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i> Save Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/uikit.js' %}"></script>
+    
+    <script>
+        function previewImage(input) {
+            const fileName = document.getElementById('fileName');
+            const preview = document.getElementById('profilePreview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    fileName.textContent = input.files[0].name;
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = '{{ user_profile.profileimg.url }}';
+                fileName.textContent = 'Click the camera to change profile picture';
+            }
+        }
+        
+        // Form submission feedback
+        $(document).ready(function() {
+            $('#settingsForm').on('submit', function(e) {
+                $('button[type="submit"]').html('<i class="fas fa-spinner fa-spin mr-2"></i> Saving...');
+                $('button[type="submit"]').prop('disabled', true);
+                
+                setTimeout(function() {
+                    window.location.href = "{% url 'profile' pk=user.username %}";
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

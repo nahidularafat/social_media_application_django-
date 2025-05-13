@@ -1,0 +1,409 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{user_profile.user.username}}'s Profile | BanglaGram</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lightbox CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <style>
+        :root {
+            --primary: #28a745;
+            --primary-light: #4caf50;
+            --secondary: #007bff;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --border: #e9ecef;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .cover-photo {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            position: relative;
+        }
+        
+        .profile-header {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            margin-top: -80px;
+            padding: 0 20px;
+        }
+        
+        .profile-pic {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid white;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--dark);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .profile-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+        }
+        
+        .btn-outline:hover {
+            background: var(--light);
+            border-color: var(--text-light);
+        }
+        
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 30px;
+        }
+        
+        .profile-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .profile-bio {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .profile-details {
+            margin-top: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .detail-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .profile-posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .post-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .post-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .no-posts {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .username {
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .location {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        /* Lightbox customizations */
+        .lightbox .lb-image {
+            border: 10px solid white;
+            border-radius: 4px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .lb-nav a.lb-prev, 
+        .lb-nav a.lb-next {
+            opacity: 1;
+            transition: all 0.3s;
+        }
+        
+        .lb-nav a.lb-prev:hover, 
+        .lb-nav a.lb-next:hover {
+            opacity: 0.8;
+        }
+        
+        .lb-data .lb-close {
+            background: none;
+            color: white;
+            font-size: 30px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            opacity: 1;
+            transition: all 0.3s;
+        }
+        
+        .lb-data .lb-close:hover {
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 992px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin-top: -120px;
+            }
+            
+            .profile-stats {
+                margin: 20px 0;
+                justify-content: center;
+            }
+            
+            .profile-actions {
+                margin: 0 auto 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .profile-stats {
+                gap: 15px;
+            }
+            
+            .profile-pic {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .cover-photo {
+                height: 200px;
+            }
+            
+            .profile-posts {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .post-image {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-header">
+        <img src="{% static 'images/resources/timeline-1.jpg' %}" class="cover-photo" alt="Cover photo">
+        
+        <div class="profile-container">
+            <div class="profile-info">
+                <img src="{{user_profile.profileimg.url}}" class="profile-pic" alt="Profile picture">
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ user_post_length }}</div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{user_followers}}</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{user_following}}</div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <a href="/" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Home
+                    </a>
+                    
+                    <form action="/follow" method="POST" style="margin: 0;">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{user.username}}" name="follower">
+                        <input type="hidden" value="{{user_object.username}}" name="user">
+                        
+                        {% if user_object.username == user.username %}
+                            <a href="/settings" class="btn btn-primary">
+                                <i class="fas fa-cog"></i> Edit Profile
+                            </a>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">
+                                {% if button_text == "Follow" %}
+                                    <i class="fas fa-user-plus"></i> Follow
+                                {% else %}
+                                    <i class="fas fa-user-minus"></i> Unfollow
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-sidebar">
+                    <h1 class="username">@{{user_profile.user.username}}</h1>
+                    
+                    {% if user_profile.location %}
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i> {{user_profile.location}}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="profile-bio">
+                        {{user_profile.bio}}
+                    </div>
+                    
+                    <div class="profile-details">
+                        {% if user_profile.user.email %}
+                        <div class="detail-item">
+                            <i class="fas fa-envelope detail-icon"></i>
+                            <span>{{user_profile.user.email}}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="profile-posts">
+                    {% if user_posts %}
+                        {% for post in user_posts %}
+                        <div class="post-item">
+                            {% if post.image %}
+                            <a href="{{ post.image.url }}" data-lightbox="user-posts" data-title="Posted by @{{user_profile.user.username}}">
+                                <img src="{{ post.image.url }}" class="post-image" alt="Post image">
+                            </a>
+                            {% else %}
+                            <div class="no-image" style="height: 250px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                <p>No image</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-posts">
+                            <h3>No Posts Yet</h3>
+                            <p>When {{user_profile.user.username}} shares photos, they'll appear here.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    
+    <!-- Lightbox configuration -->
+    <script>
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'showImageNumberLabel': false,
+            'positionFromTop': 100,
+            'alwaysShowNavOnTouchDevices': true
+        });
+        
+        // Group all images in the lightbox gallery
+        $(document).ready(function() {
+            $('[data-lightbox="user-posts"]').each(function(index) {
+                $(this).attr('data-lightbox', 'user-posts-' + index);
+            });
+        });
+    </script>
+</body>
+</html>
